@@ -1,0 +1,8 @@
+# CLion/JetBrains files
+.idea/
+cmake-build-debug/
+cmake-build-release/
+
+# Compiled binaries
+CPP_SysMon
+*.o
