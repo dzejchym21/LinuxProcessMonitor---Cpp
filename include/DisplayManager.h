@@ -7,6 +7,7 @@ class DisplayManager {
 public:
     DisplayManager();
     ~DisplayManager();
+    void drawHeader();
     void render(const ProcessManager& manager);
 };
 

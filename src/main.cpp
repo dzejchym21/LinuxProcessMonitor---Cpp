@@ -1,5 +1,5 @@
 #include <iostream>
-#include <ncursesw/ncurses.h>
+#include <curses.h>
 #include <chrono>
 
 #include "Process.h"
