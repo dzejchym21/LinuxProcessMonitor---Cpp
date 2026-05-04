@@ -36,6 +36,7 @@ public:
     // Getters
     int getPid() const;
     int getPpid() const;
+    int getNice() const;
     std::string getName() const;
     std::string getUser() const;
     char getState() const;

@@ -32,6 +32,10 @@ int Process::getPpid() const {
     return ppid;
 }
 
+int Process::getNice() const {
+    return nice;
+}
+
 std::string Process::getName() const {
     return name;
 }

@@ -29,3 +29,13 @@ void ProcessManager::refresh() {
 std::unordered_map<int, Process> ProcessManager::getProcesses() const {
     return processes;
 }
+
+std::vector<Process> ProcessManager::getProcessesSnapshot() {
+    std::vector<Process> vec;
+    vec.reserve(processes.size());
+
+    for (auto const& [pid, proc] : processes) {
+        vec.push_back(proc);
+    }
+    return vec;
+}
