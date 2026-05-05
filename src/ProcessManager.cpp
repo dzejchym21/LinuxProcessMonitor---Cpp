@@ -48,6 +48,14 @@ std::vector<Process> ProcessManager::getProcessesSnapshot(SortCategory sortCat) 
         case SortCategory::MEM:
             std::ranges::sort(vec, std::ranges::greater{}, &Process::getMemoryUsage);
             break;
+        case SortCategory::PID:
+            std::ranges::sort(vec, std::ranges::less{}, &Process::getPid);
+            break;
+        case SortCategory::NAME:
+            std::ranges::sort(vec, std::ranges::less{}, &Process::getName);
+            break;
+        default:
+            break;
     }
 
     return vec;

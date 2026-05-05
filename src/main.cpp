@@ -33,9 +33,19 @@ int main() {
                 break;
             case 'm':
                 currentSort = SortCategory::MEM;
+                needsRedraw = true;
                 break;
             case 'c':
                 currentSort = SortCategory::CPU;
+                needsRedraw = true;
+                break;
+            case 'n':
+                currentSort = SortCategory::NAME;
+                needsRedraw = true;
+                break;
+            case 'p':
+                currentSort = SortCategory::PID;
+                needsRedraw = true;
                 break;
         }
 

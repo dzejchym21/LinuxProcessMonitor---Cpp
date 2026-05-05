@@ -24,7 +24,7 @@ void DisplayManager::drawHeader() {
         mvaddch(0, x, ' ');
     }
 
-    mvprintw(0, 0, " %8s %8s %-20s %-16s %8s %-12s %-5s",
+    mvprintw(0, 0, "%8s %8s %-15s %-10s %8s %-12s %-5s",
             "PID", "PPID", "COMMAND", "USER", "NICE", "RES (kB)", "%CPU");
 
     attroff(COLOR_PAIR(1) | A_BOLD);
@@ -32,12 +32,21 @@ void DisplayManager::drawHeader() {
 
 
 void DisplayManager::render(const std::vector<Process>& processes) {
-    erase();
+    clear();
     drawHeader();
 
     int row = 1;
+    int maxRows = LINES - 1;
     for (const auto& proc : processes) {
-        mvprintw(row, 0, " %8d %8d %-20s %-16s %8d %-12ld %-5.2f",
+        if (row > maxRows) break;
+
+        move(row, 0);
+        for (int x = 0; x < COLS; x++) {
+            addch(' ');
+        }
+
+
+        mvprintw(row, 0, "%8d %8d %-15.15s %-10.10s %8d %-12ld %-5.2f",
             proc.getPid(),
             proc.getPpid(),
             proc.getName().c_str(),

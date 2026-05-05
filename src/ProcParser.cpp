@@ -64,6 +64,7 @@ void ProcParser::fillStaticData(const int pid, ProcessData& pd) {
             if (line.compare(0, 5, "Name:") == 0) {
                 pd.name = line.substr(6);
                 pd.name.erase(0, pd.name.find_first_not_of(" \t"));
+                pd.name.erase(pd.name.find_last_not_of(" \t\n\r") + 1);
             }
             else if (line.compare(0, 4, "Uid:") == 0) {
                 std::stringstream ss(line.substr(5));
