@@ -1,6 +1,9 @@
 #include "../include/ProcessManager.h"
+
+#include <algorithm>
 #include <unordered_set>
 #include <vector>
+#include <ranges>
 #include "ProcParser.h"
 
 void ProcessManager::refresh() {
@@ -30,12 +33,22 @@ std::unordered_map<int, Process> ProcessManager::getProcesses() const {
     return processes;
 }
 
-std::vector<Process> ProcessManager::getProcessesSnapshot() {
+std::vector<Process> ProcessManager::getProcessesSnapshot(SortCategory sortCat) {
     std::vector<Process> vec;
     vec.reserve(processes.size());
 
     for (auto const& [pid, proc] : processes) {
         vec.push_back(proc);
     }
+
+    switch (sortCat) {
+        case SortCategory::CPU:
+            std::ranges::sort(vec, std::ranges::greater{}, &Process::getCpuUsage);
+            break;
+        case SortCategory::MEM:
+            std::ranges::sort(vec, std::ranges::greater{}, &Process::getMemoryUsage);
+            break;
+    }
+
     return vec;
 }

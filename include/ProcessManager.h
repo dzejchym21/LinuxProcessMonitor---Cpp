@@ -4,6 +4,13 @@
 #include <unordered_map>
 #include <vector>
 
+enum class SortCategory {
+    CPU,
+    MEM,
+    PID,
+    NAME
+};
+
 
 class ProcessManager {
 private:
@@ -11,7 +18,7 @@ private:
 public:
     void refresh();
     std::unordered_map<int, Process> getProcesses() const;
-    std::vector<Process> getProcessesSnapshot();
+    std::vector<Process> getProcessesSnapshot(SortCategory sortCat);
 };
 
 
