@@ -52,7 +52,14 @@ std::vector<Process> ProcessManager::getProcessesSnapshot(SortCategory sortCat) 
             std::ranges::sort(vec, std::ranges::less{}, &Process::getPid);
             break;
         case SortCategory::NAME:
-            std::ranges::sort(vec, std::ranges::less{}, &Process::getName);
+            std::ranges::sort(vec, [](const Process&a, const Process&b) {
+                std::string_view s1 = a.getName();
+                std::string_view s2 = b.getName();
+
+                return std::ranges::lexicographical_compare(s1, s2, [](unsigned char c1, unsigned char c2) {
+                    return std::tolower(c1) < std::tolower(c2);
+                });
+            });
             break;
         default:
             break;

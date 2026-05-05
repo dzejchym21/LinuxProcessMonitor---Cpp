@@ -36,11 +36,11 @@ int Process::getNice() const {
     return nice;
 }
 
-std::string Process::getName() const {
+const std::string& Process::getName() const {
     return name;
 }
 
-std::string Process::getUser() const {
+const std::string& Process::getUser() const {
     return user;
 }
 

@@ -50,7 +50,7 @@ int main() {
         }
 
         if (needsRedraw && running) {
-            dm.render(pm.getProcessesSnapshot(currentSort));
+            dm.render(pm.getProcessesSnapshot(currentSort), currentSort);
             needsRedraw = false;
         }
     }

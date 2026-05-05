@@ -8,7 +8,8 @@ enum class SortCategory {
     CPU,
     MEM,
     PID,
-    NAME
+    NAME,
+    OTHER
 };
 
 

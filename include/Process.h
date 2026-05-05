@@ -37,8 +37,8 @@ public:
     int getPid() const;
     int getPpid() const;
     int getNice() const;
-    std::string getName() const;
-    std::string getUser() const;
+    const std::string& getName() const;
+    const std::string& getUser() const;
     char getState() const;
     double getCpuUsage() const;
     long getMemoryUsage() const;

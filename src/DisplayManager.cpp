@@ -1,4 +1,6 @@
 #include "DisplayManager.h"
+
+#include <cstring>
 #include <curses.h>
 #include <vector>
 
@@ -6,6 +8,7 @@ DisplayManager::DisplayManager() {
     initscr();
     start_color();
     init_pair(1, COLOR_BLACK, COLOR_WHITE);
+    init_pair(2, COLOR_BLACK, COLOR_GREEN);
     keypad(stdscr, true);
     noecho();
     curs_set(0);
@@ -17,43 +20,64 @@ DisplayManager::~DisplayManager() {
     endwin();
 }
 
-void DisplayManager::drawHeader() {
+void DisplayManager::drawHeader(SortCategory currentSort) {
     attron(COLOR_PAIR(1) | A_BOLD);
+    int currentX = 0;
 
-    for (int x = 0; x < COLS; x++) {
-        mvaddch(0, x, ' ');
-    }
+    auto drawCol = [&](const char* label, int width, SortCategory colCat, bool leftAlign) {
+        int pair = (currentSort == colCat && colCat != SortCategory::OTHER) ? 2 : 1;
 
-    mvprintw(0, 0, "%8s %8s %-15s %-10s %8s %-12s %-5s",
-            "PID", "PPID", "COMMAND", "USER", "NICE", "RES (kB)", "%CPU");
+        attron(COLOR_PAIR(pair) | A_BOLD);
+
+        for (int i = 0; i < width; i++) {
+            mvaddch(0, currentX + i, ' ');
+        }
+
+        if (leftAlign) {
+            mvprintw(0, currentX , "%.*s", width, label);
+        } else {
+            int len = strlen(label);
+            int startPos = (len > width) ? currentX : currentX + (width - len);
+            mvprintw(0, startPos, "%.*s", width, label);
+        }
+
+        currentX += width;
+        mvaddch(0, currentX, ' ');
+        currentX += 1;
+        attroff(COLOR_PAIR(pair) | A_BOLD);
+    };
+
+    drawCol("PID ", 9, SortCategory::PID, false);
+    drawCol("PPID", 7, SortCategory::OTHER, false);
+    drawCol("USER", 15, SortCategory::OTHER, true);
+    drawCol("NICE", 8, SortCategory::OTHER, false);
+    drawCol("RES (kB)", 12, SortCategory::MEM, false);
+    drawCol("%CPU", 5, SortCategory::CPU, false);
+    drawCol("COMMAND", 20, SortCategory::NAME, true);
+    //mvprintw(0, 0, "%8s %8s %-15s %-10s %8s %-12s %-5s",
+    //        "PID", "PPID", "COMMAND", "USER", "NICE", "RES (kB)", "%CPU");
 
     attroff(COLOR_PAIR(1) | A_BOLD);
 }
 
 
-void DisplayManager::render(const std::vector<Process>& processes) {
+void DisplayManager::render(const std::vector<Process>& processes, SortCategory currentSort) {
     clear();
-    drawHeader();
+    drawHeader(currentSort);
 
     int row = 1;
     int maxRows = LINES - 1;
     for (const auto& proc : processes) {
         if (row > maxRows) break;
 
-        move(row, 0);
-        for (int x = 0; x < COLS; x++) {
-            addch(' ');
-        }
-
-
-        mvprintw(row, 0, "%8d %8d %-15.15s %-10.10s %8d %-12ld %-5.2f",
+        mvprintw(row, 0, "%8d %8d %-15.15s %8d %12ld %5.2f %-15.15s",
             proc.getPid(),
             proc.getPpid(),
-            proc.getName().c_str(),
             proc.getUser().c_str(),
             proc.getNice(),
             proc.getMemoryUsage(),
-            proc.getCpuUsage());
+            proc.getCpuUsage(),
+            proc.getName().c_str());
 
         row++;
     }
